@@ -80,7 +80,9 @@ class FileSummary():
 
     @staticmethod
     def _format_date(date):
-        return date.strftime('%Y-%m-%dT%H:%M:%S')
+        if date is not None:
+            return date.strftime('%Y-%m-%dT%H:%M:%S')
+        return "[]"
 
     @staticmethod
     def _gps_to_utc_time(gps_weeks, gps_milliseconds, leapseconds=18):
