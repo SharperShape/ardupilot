@@ -102,10 +102,10 @@ def main(args):
 
     print(FileSummary.header())
     if args.log_dir:
-        for log_file in glob.glob('{}/*.bin'.format(args.log_dir)):
+        for log_file in glob.glob('{}/*.[bB][iI][nN]'.format(args.log_dir)):
             file_summary = FileSummary(log_file, args.min_flight_altitude)
             print(file_summary.summary())
-        for log_file in glob.glob('{}/*.log'.format(args.log_dir)):
+        for log_file in glob.glob('{}/*.[lL][oO][gG]'.format(args.log_dir)):
             file_summary = FileSummary(log_file, args.min_flight_altitude)
             print(file_summary.summary())
 
