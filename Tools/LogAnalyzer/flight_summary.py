@@ -108,7 +108,7 @@ def main(args):
                         help='threshold of the takeoff and landing', type=int, default=5, required=False)
     args = parser.parse_args()
 
-    print("sdgsdgsdgsdg", args.min_flight_altitude)
+    #print("sdgsdgsdgsdg", args.min_flight_altitude)
     print(FileSummary.header())
     if args.log_dir:
         for log_file in glob.glob('{}/*.[bB][iI][nN]'.format(args.log_dir)):
