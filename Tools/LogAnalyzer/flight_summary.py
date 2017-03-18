@@ -15,6 +15,8 @@ class FileSummary():
         self.last_landing = None
         self.flights = 0
         self.mAh_total = 0
+        
+        self.flight_time_total = 0
 
         if DataflashLogHelper.isLogEmpty(self.logdata):
             return
@@ -25,15 +27,16 @@ class FileSummary():
 
     @staticmethod
     def header():
-        return 'filename, created, first-takeoff, last-landing, num-flights, mAh-total'
+        return 'filename, created, first-takeoff, last-landing, num-flights, flight-time, mAh-total'
 
     def summary(self):
-        return '{}, {}, {}, {}, {}, {}'.format(
+        return '{}, {}, {}, {}, {}, {}, {}'.format(
             self.filename,
             self._format_date(self.created),
             self._format_date(self.first_takeoff),
             self._format_date(self.last_landing),
             self.flights,
+            self.flight_time_total,
             self.mAh_total
         )
 
@@ -48,6 +51,8 @@ class FileSummary():
         can_increase_flight_count = True
         flying_dur_s = 0
         takeoff_time = None
+        
+
 
         for event_id, altitude in self.logdata.channels['BARO']['Alt'].listData:
             prev_is_flying = curr_is_flying
@@ -71,6 +76,7 @@ class FileSummary():
                     event_id) - takeoff_time).total_seconds()
             else:
                 can_increase_flight_count = True
+                self.flight_time_total += flying_dur_s
                 flying_dur_s = 0
 
     def _get_utc_time_by_event_id(self, event_id):
@@ -98,10 +104,11 @@ def main(args):
         '--log-dir', help='path to Dataflash log file directory', required=False)
     parser.add_argument(
         '--log-file', help='path to Dataflash log file', required=False)
-    parser.add_argument('--min_flight_altitude',
-                        help='threshold of the takeoff and landing', default=5, required=False)
+    parser.add_argument('--min-flight-altitude',
+                        help='threshold of the takeoff and landing', type=int, default=5, required=False)
     args = parser.parse_args()
 
+    #print("sdgsdgsdgsdg", args.min_flight_altitude)
     print(FileSummary.header())
     if args.log_dir:
         for log_file in glob.glob('{}/*.[bB][iI][nN]'.format(args.log_dir)):
